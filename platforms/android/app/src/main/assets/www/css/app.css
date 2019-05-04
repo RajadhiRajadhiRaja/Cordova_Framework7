@@ -1,0 +1,15 @@
+.navbar-inner{
+    background-color: #ff3b30;
+}
+  
+.icon-back:after {
+    color: #fbfbfb;
+}
+
+.navbar.title {
+    align-content: center
+}
+
+.card-footer {
+    text-align: center
+}

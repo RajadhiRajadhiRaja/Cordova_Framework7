@@ -1,0 +1,123 @@
+<!-- component template -->
+<template>
+  <div class="page">
+    <div class="navbar">
+        <div class="navbar-inner sliding">
+            <div class="left">
+              <a href="#" class="link back">
+                <i class="icon icon-back"></i>
+                <span class="if-not-md">Back</span>
+              </a>
+            </div>
+          </div>
+    </div>
+    <div class="page-content">
+      <div class="block block-strong text-align-center"><br>
+        <h2><p class="text-align-center" id="title">Verify Recovery Phrase</p></h2>
+        <p class="text-align-center" id="subtitle">Tap the words to put them next to each other in the correct order</p>
+
+        <div class="card text-align-center">
+          <div class="card-content card-content-padding">
+              {{#each selectedMnemonic}}
+              <div style="display: none;" class="chip" >
+                <div class="chip-label" @click="openAlert({{@index}})">{{this}}</div>
+              </div>
+              {{/each}}
+              <div id="chip-append">
+                
+              </div>
+              
+              
+          </div>
+        </div>
+
+        {{#each mnemonic}}
+        <div class="chip" id="chip{{@index}}">
+          <div class="chip-label" @click="openAlert({{@index}})">{{this}}</div>
+        </div>
+        {{/each}}
+        
+    </div>   
+      <div class="block">
+          <p class="row" id="btncontinue"> <a href="/generatewallet/" class="ac-1 col button button-fill color-red disabled">CONTINUE</a></p>
+      </div>
+  </div>
+
+</template>
+<!-- component styles -->
+<style>
+  .red-link {
+    color: red;
+  }
+</style>
+<!-- rest of component data and methods -->
+<script>
+
+  var UserArray=[];
+  var UserArray2=[];
+  var flag=true;
+   var appendData='';
+   var myId='';
+  export default {
+    data: function () {
+      return {
+        mnemonic : null,
+        selectedMnemonic: [],
+        selected: []
+      }
+    },
+    methods: {
+      openAlert: function (id) {
+       
+        var getItems=JSON.parse(localStorage.getItem("mnemonicSeedStorage"));
+        console.log(getItems);
+        appendData+='<div class="chip"><div class="chip-label">' + this.mnemonic[id] + '</div></div> ';
+        document.getElementById('chip-append').innerHTML=appendData;
+        UserArray.push(this.mnemonic[id]);
+        localStorage.setItem('added-items2', JSON.stringify(UserArray));
+        UserArray2 = JSON.parse(localStorage.getItem("added-items2"));
+        console.log(UserArray2);
+        function equalArray(a, b) {
+        if (a.length === b.length) {
+            for (var i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    if(equalArray(UserArray2,getItems)){
+    //    document.getElementById('title').innerHTML='Click continue to enter';
+    //  document.getElementById('subtitle').innerHTML='';
+     document.getElementById('btncontinue').innerHTML='<a href="/generatewallet/" class="ac-1 col button button-fill color-red">CONTINUE</a>';
+    }
+    myId='chip'+id;
+        document.getElementById(myId).remove();
+       
+        
+    
+        //console.log(this.mnemonic[id])
+      // }
+      this.$setState({
+        selectedMnemonic: this.mnemonic[id],
+      }
+      );
+    },
+    },
+    on: {
+      pageInit: function () {
+        
+        var mnemonic=localStorage.getItem("mnemonicSeed");
+        var shuffle = require('shuffle-words');
+        var mnemonicShuffle = shuffle(mnemonic);
+        var res = mnemonicShuffle.split(" ");
+        this.$setState({
+        mnemonic: res,
+        });
+      },
+    }
+  }
+</script>
