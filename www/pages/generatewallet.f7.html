@@ -1,0 +1,86 @@
+<!-- component template -->
+<template>
+    <div class="page">
+      <div class="navbar bg-color-blue">
+          <div class="navbar-inner sliding">
+              <div class="left">
+                <a href="#" class="link back">
+                  <i class="icon icon-back"></i>
+                  <span class="if-not-md">Back</span>
+                </a>
+              </div>
+            </div>
+      </div>
+      <!-- <div class="page-content"> -->
+        <div class="block block-strong text-align-center"><br>
+          <h2><p class="text-align-center">Your Wallet</p></h2>
+          <p class="text-align-center">Tap the words to put them next to each other in the correct order</p>
+          <!-- Display Mnemonic -->
+          <h3><p class="text-align-center">Your Mnemonic</p></h3>
+          {{#each mnemonic}}
+          <div class="chip">
+            <div class="chip-label">{{this}}</div>
+          </div>
+          {{/each}}
+
+          <!-- Display Public Key -->
+
+          <h3><p class="text-align-center">Address</p></h3>
+          <p>{{this.address}}</p>
+
+          <!-- Display Private Key -->
+
+          <h3><p class="text-align-center">Private Key</p></h3>
+          <p>{{this.privateKey}}</p>
+
+        </div>
+        
+        <div class="block">
+          <p class="row"> <a href="/generatewallet/" class="ac-1 col button button-fill color-red">CLOSE</a></p>
+        </div>
+    <!-- </div> -->
+  </template>
+  <!-- component styles -->
+  <style>
+    .red-link {
+      color: red;
+    }    
+  </style>
+  <!-- rest of component data and methods -->
+  <script>
+    export default {
+      data: function () {
+        return {
+          mnemonic : null,
+          selected: [],
+          address: null,
+          privateKey: null
+        }
+      },
+      methods: {
+        
+      },
+      on: {
+        pageInit: function () {
+          var mnemonic=localStorage.getItem("mnemonicSeed");
+          var res = mnemonic.split(" ");
+          this.$setState({
+          mnemonic: res,
+          });
+
+          const bip39 = require('bip39');
+          var ethers = require("ethers");
+          const privateKey = ethers.Wallet.fromMnemonic(mnemonic).privateKey;
+          const address = ethers.Wallet.fromMnemonic(mnemonic).address
+          // console.log(privateKey);
+          // console.log(address);
+          
+          this.$setState({
+          address: address,
+          privateKey: privateKey
+          });
+
+        },
+      }
+    }
+  </script>
